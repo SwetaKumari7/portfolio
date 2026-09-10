@@ -1,266 +1,200 @@
-// =========================================
-// MOBILE NAVIGATION
-// =========================================
+document.addEventListener("DOMContentLoaded", () => {
 
-const menuButton = document.getElementById('menuButton');
+  /* ================================
+     MOBILE NAVIGATION
+  ================================= */
 
-const navigation = document.getElementById('navigation');
+  const menuButton = document.querySelector(".menu-button");
+  const nav = document.querySelector("nav");
 
-menuButton.addEventListener('click', () => {
-  navigation.classList.toggle('show');
-});
+  if (menuButton && nav) {
+      menuButton.addEventListener("click", () => {
+          nav.classList.toggle("show");
 
-// Close mobile menu after clicking
+          const icon = menuButton.querySelector("i");
 
-const navItems = document.querySelectorAll('#navigation a');
+          if (icon) {
+              if (nav.classList.contains("show")) {
+                  icon.classList.remove("fa-bars");
+                  icon.classList.add("fa-xmark");
+              } else {
+                  icon.classList.remove("fa-xmark");
+                  icon.classList.add("fa-bars");
+              }
+          }
+      });
 
-navItems.forEach((item) => {
-  item.addEventListener('click', () => {
-    navigation.classList.remove('show');
-  });
-});
+      /* Close menu after clicking a navigation link */
 
-// =========================================
-// TYPING EFFECT
-// =========================================
+      nav.querySelectorAll("a").forEach(link => {
+          link.addEventListener("click", () => {
+              nav.classList.remove("show");
 
-const typingText = document.getElementById('typingText');
+              const icon = menuButton.querySelector("i");
 
-const roles = [
-  'B.Tech IT Student',
-
-  'AI / ML Enthusiast',
-
-  'Computer Vision Learner',
-
-  'Python Developer',
-
-  'Problem Solver',
-];
-
-let roleIndex = 0;
-
-let characterIndex = 0;
-
-let deleting = false;
-
-function typeEffect() {
-  const currentRole = roles[roleIndex];
-
-  if (!deleting) {
-    typingText.textContent = currentRole.substring(0, characterIndex + 1);
-
-    characterIndex++;
-
-    if (characterIndex === currentRole.length) {
-      deleting = true;
-
-      setTimeout(typeEffect, 1400);
-
-      return;
-    }
-  } else {
-    typingText.textContent = currentRole.substring(0, characterIndex - 1);
-
-    characterIndex--;
-
-    if (characterIndex === 0) {
-      deleting = false;
-
-      roleIndex++;
-
-      if (roleIndex >= roles.length) {
-        roleIndex = 0;
-      }
-    }
+              if (icon) {
+                  icon.classList.remove("fa-xmark");
+                  icon.classList.add("fa-bars");
+              }
+          });
+      });
   }
 
-  setTimeout(typeEffect, deleting ? 45 : 75);
-}
 
-typeEffect();
+  /* ================================
+     ACTIVE NAVIGATION LINK
+  ================================= */
 
-// =========================================
-// ACTIVE NAVIGATION
-// =========================================
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll("nav a");
 
-const sections = document.querySelectorAll('section[id]');
+  const updateActiveLink = () => {
 
-const links = document.querySelectorAll('nav a');
+      let currentSection = "";
 
-window.addEventListener('scroll', () => {
-  let current = '';
+      sections.forEach(section => {
 
-  sections.forEach((section) => {
-    const sectionTop = section.offsetTop - 150;
+          const sectionTop = section.offsetTop - 140;
+          const sectionHeight = section.offsetHeight;
 
-    const sectionHeight = section.clientHeight;
+          if (
+              window.scrollY >= sectionTop &&
+              window.scrollY < sectionTop + sectionHeight
+          ) {
+              currentSection = section.getAttribute("id");
+          }
+      });
 
-    if (
-      window.scrollY >= sectionTop &&
-      window.scrollY < sectionTop + sectionHeight
-    ) {
-      current = section.getAttribute('id');
-    }
-  });
+      navLinks.forEach(link => {
 
-  links.forEach((link) => {
-    link.classList.remove('active');
+          link.classList.remove("active");
 
-    if (link.getAttribute('href') === '#' + current) {
-      link.classList.add('active');
-    }
-  });
-});
+          const href = link.getAttribute("href");
 
-// =========================================
-// CURSOR GLOW
-// =========================================
+          if (href === `#${currentSection}`) {
+              link.classList.add("active");
+          }
+      });
+  };
 
-const glowOne = document.querySelector('.glow-one');
+  window.addEventListener("scroll", updateActiveLink);
 
-const glowTwo = document.querySelector('.glow-two');
+  updateActiveLink();
 
-document.addEventListener('mousemove', (event) => {
-  const x = event.clientX;
 
-  const y = event.clientY;
+  /* ================================
+     TYPING EFFECT
+  ================================= */
 
-  glowOne.style.transform = `translate(${x * 0.03}px, ${y * 0.03}px)`;
+  const typingElement = document.querySelector(".typing-text");
 
-  glowTwo.style.transform = `translate(${-x * 0.02}px, ${-y * 0.02}px)`;
-});
+  if (typingElement) {
 
-// =========================================
-// CONSOLE MESSAGE
-// =========================================
+      const texts = [
+          "Python Developer",
+          "AI / ML Enthusiast",
+          "Computer Vision Developer",
+          "Cybersecurity Enthusiast",
+          "Open Source Enthusiast"
+      ];
 
-console.log(
-  "%c👋 Hey! Welcome to Sweta's Portfolio.",
-  'color:#38bdf8;font-size:16px;font-weight:bold;'
-);
+      let textIndex = 0;
+      let characterIndex = 0;
+      let deleting = false;
 
-console.log(
-  '%cBuilt with HTML + CSS + JavaScript.',
-  'color:#94a3b8;font-size:12px;'
-);
+      const typeEffect = () => {
 
-// =========================================
-// PROJECT CARD MOUSE EFFECT
-// =========================================
+          const currentText = texts[textIndex];
 
-const projectCards = document.querySelectorAll('.project-card');
+          if (!deleting) {
 
-projectCards.forEach((card) => {
-  card.addEventListener('mousemove', (event) => {
-    const rect = card.getBoundingClientRect();
+              typingElement.textContent =
+                  currentText.substring(0, characterIndex + 1);
 
-    const x = event.clientX - rect.left;
+              characterIndex++;
 
-    const y = event.clientY - rect.top;
+              if (characterIndex === currentText.length) {
+                  deleting = true;
 
-    card.style.setProperty('--mouse-x', `${x}px`);
+                  setTimeout(typeEffect, 1600);
+                  return;
+              }
 
-    card.style.setProperty('--mouse-y', `${y}px`);
-  });
+          } else {
 
-  card.addEventListener('mouseleave', () => {
-    card.style.setProperty('--mouse-x', '50%');
+              typingElement.textContent =
+                  currentText.substring(0, characterIndex - 1);
 
-    card.style.setProperty('--mouse-y', '50%');
-  });
-});
+              characterIndex--;
 
-// =========================================
-// NUMBER COUNTER ANIMATION
-// =========================================
+              if (characterIndex === 0) {
+                  deleting = false;
 
-const statNumbers = document.querySelectorAll('.stat-item strong');
+                  textIndex++;
 
-const observer = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
+                  if (textIndex >= texts.length) {
+                      textIndex = 0;
+                  }
+              }
+          }
 
-      const element = entry.target;
+          setTimeout(
+              typeEffect,
+              deleting ? 45 : 80
+          );
+      };
 
-      const original = element.textContent.trim();
-
-      // Only animate numeric values
-
-      if (!/^\d+(\.\d+)?$/.test(original)) {
-        observer.unobserve(element);
-
-        return;
-      }
-
-      const target = parseFloat(original);
-
-      const decimal = original.includes('.')
-        ? original.split('.')[1].length
-        : 0;
-
-      let current = 0;
-
-      const duration = 1200;
-
-      const start = performance.now();
-
-      function update(time) {
-        const progress = Math.min((time - start) / duration, 1);
-
-        const eased = 1 - Math.pow(1 - progress, 3);
-
-        current = target * eased;
-
-        element.textContent = current.toFixed(decimal);
-
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        } else {
-          element.textContent = original;
-        }
-      }
-
-      requestAnimationFrame(update);
-
-      observer.unobserve(element);
-    });
-  },
-
-  {
-    threshold: 0.5,
+      typeEffect();
   }
-);
 
-statNumbers.forEach((number) => {
-  observer.observe(number);
-});
 
-// =========================================
-// STAGGER SKILL TAGS
-// =========================================
+  /* ================================
+     REVEAL ON SCROLL
+  ================================= */
 
-const skillGroups = document.querySelectorAll('.skill-list');
+  const revealElements = document.querySelectorAll(
+      ".skill-category, .project-card, .experience-card, .research-card, .achievement-card, .opensource-card"
+  );
 
-skillGroups.forEach((group) => {
-  const tags = group.querySelectorAll('span');
+  const revealObserver = new IntersectionObserver(
+      entries => {
 
-  tags.forEach((tag, index) => {
-    tag.style.transitionDelay = `${index * 50}ms`;
+          entries.forEach(entry => {
+
+              if (entry.isIntersecting) {
+
+                  entry.target.style.opacity = "1";
+                  entry.target.style.transform = "translateY(0)";
+
+                  revealObserver.unobserve(entry.target);
+              }
+          });
+
+      },
+      {
+          threshold: 0.12
+      }
+  );
+
+  revealElements.forEach(element => {
+
+      element.style.opacity = "0";
+      element.style.transform = "translateY(20px)";
+      element.style.transition =
+          "opacity 0.6s ease, transform 0.6s ease";
+
+      revealObserver.observe(element);
   });
+
+
+  /* ================================
+     CURRENT YEAR
+  ================================= */
+
+  const yearElement = document.querySelector(".current-year");
+
+  if (yearElement) {
+      yearElement.textContent = new Date().getFullYear();
+  }
+
 });
-
-// =========================================
-// TERMINAL TYPING SOUND EFFECT
-// =========================================
-
-console.log(
-  '%cSYSTEM INITIALIZED',
-  'color:#4ade80;font-family:monospace;font-size:14px;font-weight:bold;'
-);
-
-console.log(
-  "%c> Welcome to Sweta's developer portfolio",
-  'color:#38bdf8;font-family:monospace;'
-);
